@@ -1,5 +1,5 @@
 Detecting Phishing Websites Using URL-Based, HTML-Based, and Domain-Based Features
-📌 Project Overview
+ Project Overview
 
 This project focuses on building a machine learning–based system to detect phishing websites using a structured dataset containing URL features, HTML/JavaScript properties, and domain information. The goal is to accurately classify websites as legitimate or phishing based on patterns extracted from the data.
 
@@ -19,7 +19,7 @@ Feature selection
 
 Preparation for supervised modelling
 
-📂 Dataset Description
+ Dataset Description
 
 The dataset contains features grouped into three categories:
 
@@ -67,7 +67,7 @@ legitimate (0)
 
 phishing (1)
 
-🧹 Data Cleaning & Preprocessing
+ Data Cleaning & Preprocessing
 Completed steps:
 
 Dropped irrelevant columns such as row identifiers.
