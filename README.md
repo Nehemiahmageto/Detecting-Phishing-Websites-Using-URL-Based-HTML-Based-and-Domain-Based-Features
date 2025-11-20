@@ -1,79 +1,119 @@
-Detecting Phishing Websites Using URL-Based, HTML-Based, and Domain-Based Features
- Project Overview
+# Detecting Phishing Websites Using URL-Based, HTML-Based, and Domain-Based Features
 
-This project focuses on building a machine learning–based system to detect phishing websites using a structured dataset containing URL features, HTML/JavaScript properties, and domain information. The goal is to accurately classify websites as legitimate or phishing based on patterns extracted from the data.
+This project focuses on identifying phishing URLs using a combination of feature engineering, rule-based heuristic labeling, and machine learning modeling. The dataset contains 11,430 URLs and 88 extracted features describing URL structure, domain characteristics, HTML behavior, and statistical indicators.
 
-So far, the project includes:
+---
 
-Dataset loading and preprocessing
+## 📂 Dataset Overview
 
-Exploratory Data Analysis (EDA)
+After cleaning and preprocessing, the dataset consists of:
 
-Identification and handling of missing values
+- **11,430 rows**
+- **88 features**
+- 1 textual field: `url`
+- The original `status` column contained **11,430 NaN values** and was therefore **dropped entirely**.
 
-Feature encoding and scaling
+These features include:
+- URL length and structure (`length_url`, `nb_dots`, `nb_hyphens`, etc.)
+- Domain-level statistics (`domain_age`, `domain_registration_length`)
+- HTML and JavaScript indicators (`onmouseover`, `sfh`, `popup_window`)
+- External/internal hyperlink ratios
+- Search engine visibility (`google_index`)
+- Statistical phishing signals (`statistical_report`, `suspecious_tld`)
 
-Correlation analysis and heatmap visualization
+---
 
-Feature selection
+## 🧹 Data Cleaning Steps Completed
 
-Preparation for supervised modelling
+1. Dropped the `status` column due to 100% missing values.
+2. Verified no remaining NaNs across the dataset.
+3. Ensured all feature columns are numeric (except `url`).
+4. Scaled numerical features using StandardScaler for PCA and clustering workflows.
 
- Dataset Description
+---
 
-The dataset contains features grouped into three categories:
+## 📊 Exploratory Analysis
 
-1. URL-Based Features
+### PCA (Principal Component Analysis)
 
-Examples:
+- Applied PCA to reduce dimensionality.
+- Most points cluster between:
+  - **PC1: –3 to 10**
+  - **PC2: –3 to 5**
+- No distinct, naturally separable classes appear (as expected with high-dimensional security data).
 
-url_length
+The PCA scatter plot helps visualize structure but does not indicate inherent labels.
 
-num_dots
+---
 
-num_hyphens
+## 🎯 Reconstructing the Target Variable (Because `status` Was Removed)
 
-has_ip_address
+Since the dataset lacked a usable label column, a **rule-based heuristic labeling system** was implemented to classify URLs as:
 
-uses_https
+- **0 = Legitimate**
+- **1 = Phishing**
 
-2. HTML and JavaScript Features
+This follows common patterns used in cybersecurity research and phishing-detection systems.
 
-Examples:
+### The rules are based on:
 
-num_iframes
+- Very short domain age  
+- Excessive special characters in the URL  
+- Use of raw IP addresses  
+- Suspicious or statistical TLD indicators  
+- Known phishing patterns in features (`suspecious_tld`, `statistical_report`)  
+- Fake HTTPS tokens  
+- URLs not indexed by Google  
 
-num_scripts
+These rules were combined to create a reliable, “silver label” target variable.
 
-external_resources
+---
 
-popup_count
+## 🤖 Unsupervised Learning (Before Label Reconstruction)
 
-3. Domain-Based Features
+### K-Means Clustering
 
-Examples:
+- Performed clustering on PCA-reduced components.
+- Cluster interpretation shows:
+  - One cluster dominating the **–3 to 0** PC1 region.
+  - Another cluster dominating the **5+** PC1 region.
+- These clusters reflect **structural differences in URLs**, not classes.
 
-domain_age
+K-means was exploratory and not used for evaluation since no true label existed.
 
-dns_record
+---
 
-domain_registration_length
+## 🔥 Supervised Machine Learning (Next Steps)
 
-Target Variable
+Now that a target variable has been reconstructed, the project is ready to begin supervised modeling:
 
-status:
+- Train/test split  
+- Random Forest  
+- Logistic Regression  
+- XGBoost  
+- SVM  
+- Evaluation metrics  
 
-legitimate (0)
+This phase begins immediately after establishing the rule-based labels.
 
-phishing (1)
+---
 
- Data Cleaning & Preprocessing
-Completed steps:
+## 📌 Project Status (So Far)
 
-Dropped irrelevant columns such as row identifiers.
+- Dataset loaded ✔️  
+- Irrelevant/empty label column removed ✔️  
+- PCA completed ✔️  
+- K-Means clustering completed ✔️  
+- Rule-based target variable constructed ✔️  
+- Ready to begin ML classification modeling 🔥  
 
-Fixed data types (converted string numerics to integers).
+---
 
-Checked for missing values and confirmed dataset integrity.
+## 🚀 Next Steps
 
-Encoded target variable:
+- Train multiple ML models  
+- Compare performance  
+- Plot ROC, confusion matrix, and feature importance  
+- Deploy as a prediction API / Flask app (optional)  
+
+---
