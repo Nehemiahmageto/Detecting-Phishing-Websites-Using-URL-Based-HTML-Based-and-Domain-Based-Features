@@ -4,7 +4,7 @@ This project focuses on identifying phishing URLs using a combination of feature
 
 ---
 
-## 📂 Dataset Overview
+##  Dataset Overview
 
 After cleaning and preprocessing, the dataset consists of:
 
@@ -23,7 +23,7 @@ These features include:
 
 ---
 
-## 🧹 Data Cleaning Steps Completed
+##  Data Cleaning Steps Completed
 
 1. Dropped the `status` column due to 100% missing values.
 2. Verified no remaining NaNs across the dataset.
@@ -32,7 +32,7 @@ These features include:
 
 ---
 
-## 📊 Exploratory Analysis
+##  Exploratory Analysis
 
 ### PCA (Principal Component Analysis)
 
@@ -46,7 +46,7 @@ The PCA scatter plot helps visualize structure but does not indicate inherent la
 
 ---
 
-## 🎯 Reconstructing the Target Variable (Because `status` Was Removed)
+##  Reconstructing the Target Variable (Because `status` Was Removed)
 
 Since the dataset lacked a usable label column, a **rule-based heuristic labeling system** was implemented to classify URLs as:
 
@@ -69,7 +69,7 @@ These rules were combined to create a reliable, “silver label” target variab
 
 ---
 
-## 🤖 Unsupervised Learning (Before Label Reconstruction)
+##  Unsupervised Learning (Before Label Reconstruction)
 
 ### K-Means Clustering
 
@@ -83,7 +83,7 @@ K-means was exploratory and not used for evaluation since no true label existed.
 
 ---
 
-## 🔥 Supervised Machine Learning (Next Steps)
+##  Supervised Machine Learning (Next Steps)
 
 Now that a target variable has been reconstructed, the project is ready to begin supervised modeling:
 
@@ -98,18 +98,18 @@ This phase begins immediately after establishing the rule-based labels.
 
 ---
 
-## 📌 Project Status (So Far)
+##  Project Status (So Far)
 
-- Dataset loaded ✔️  
-- Irrelevant/empty label column removed ✔️  
-- PCA completed ✔️  
-- K-Means clustering completed ✔️  
-- Rule-based target variable constructed ✔️  
-- Ready to begin ML classification modeling 🔥  
+- Dataset loaded   
+- Irrelevant/empty label column removed   
+- PCA completed   
+- K-Means clustering completed   
+- Rule-based target variable constructed   
+- Ready to begin ML classification modeling   
 
 ---
 
-## 🚀 Next Steps
+##  Next Steps
 
 - Train multiple ML models  
 - Compare performance  
