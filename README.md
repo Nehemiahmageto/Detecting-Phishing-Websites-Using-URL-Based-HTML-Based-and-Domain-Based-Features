@@ -1,119 +1,94 @@
 # Detecting Phishing Websites Using URL-Based, HTML-Based, and Domain-Based Features
 
-This project focuses on identifying phishing URLs using a combination of feature engineering, rule-based heuristic labeling, and machine learning modeling. The dataset contains 11,430 URLs and 88 extracted features describing URL structure, domain characteristics, HTML behavior, and statistical indicators.
+This repository demonstrates a workflow for detecting phishing URLs by combining extensive feature engineering, exploratory data analysis, and machine learning modeling. The notebook `Model.ipynb` implements the end‑to‑end process, and this README mirrors its structure.
 
 ---
 
-##  Dataset Overview
+## Dataset Overview
 
-After cleaning and preprocessing, the dataset consists of:
+- **Rows:** 11,430
+- **Features:** 88 (numeric) + 1 textual column `url`
+- The original `status` column contained only missing values and was removed.
 
-- **11,430 rows**
-- **88 features**
-- 1 textual field: `url`
-- The original `status` column contained **11,430 NaN values** and was therefore **dropped entirely**.
-
-These features include:
-- URL length and structure (`length_url`, `nb_dots`, `nb_hyphens`, etc.)
-- Domain-level statistics (`domain_age`, `domain_registration_length`)
-- HTML and JavaScript indicators (`onmouseover`, `sfh`, `popup_window`)
-- External/internal hyperlink ratios
-- Search engine visibility (`google_index`)
-- Statistical phishing signals (`statistical_report`, `suspecious_tld`)
+The feature set includes:
+- URL structural metrics (e.g., `length_url`, `nb_dots`, `nb_hyphens`)
+- Domain‑level attributes (`domain_age`, `domain_registration_length`)
+- HTML/JavaScript signals (`onmouseover`, `sfh`, `popup_window`)
+- Link ratios (`ratio_intHyperlinks`, `ratio_extHyperlinks`)
+- Search‑engine visibility (`google_index`)
+- Statistical phishing indicators (`statistical_report`, `suspecious_tld`)
 
 ---
 
-##  Data Cleaning Steps Completed
+## Data Cleaning
 
-1. Dropped the `status` column due to 100% missing values.
-2. Verified no remaining NaNs across the dataset.
+1. Dropped the `status` column due to 100 % missing values.
+2. Confirmed no remaining NaNs across the dataset.
 3. Ensured all feature columns are numeric (except `url`).
-4. Scaled numerical features using StandardScaler for PCA and clustering workflows.
+4. Applied `StandardScaler` to numeric features for downstream PCA and clustering.
 
 ---
 
-##  Exploratory Analysis
+## Exploratory Analysis
 
-### PCA (Principal Component Analysis)
+### Principal Component Analysis (PCA)
+- Reduced dimensionality to visualize data structure.
+- Most points cluster within **PC1: –3 to 10** and **PC2: –3 to 5**.
+- No clear separation between legitimate and phishing URLs, which is expected for high‑dimensional security data.
 
-- Applied PCA to reduce dimensionality.
-- Most points cluster between:
-  - **PC1: –3 to 10**
-  - **PC2: –3 to 5**
-- No distinct, naturally separable classes appear (as expected with high-dimensional security data).
-
-The PCA scatter plot helps visualize structure but does not indicate inherent labels.
-
----
-
-##  Reconstructing the Target Variable (Because `status` Was Removed)
-
-Since the dataset lacked a usable label column, a **rule-based heuristic labeling system** was implemented to classify URLs as:
-
-- **0 = Legitimate**
-- **1 = Phishing**
-
-This follows common patterns used in cybersecurity research and phishing-detection systems.
-
-### The rules are based on:
-
-- Very short domain age  
-- Excessive special characters in the URL  
-- Use of raw IP addresses  
-- Suspicious or statistical TLD indicators  
-- Known phishing patterns in features (`suspecious_tld`, `statistical_report`)  
-- Fake HTTPS tokens  
-- URLs not indexed by Google  
-
-These rules were combined to create a reliable, “silver label” target variable.
+### K‑Means Clustering (Unsupervised)
+- Performed clustering on the PCA‑reduced components.
+- Identified distinct clusters reflecting structural differences in URLs, not class labels.
 
 ---
 
-##  Unsupervised Learning (Before Label Reconstruction)
+## Reconstructing the Target Variable
 
-### K-Means Clustering
+Because the original label was unavailable, a rule‑based heuristic was created to generate a **silver‑label** target:
+- `0` = Legitimate
+- `1` = Phishing
 
-- Performed clustering on PCA-reduced components.
-- Cluster interpretation shows:
-  - One cluster dominating the **–3 to 0** PC1 region.
-  - Another cluster dominating the **5+** PC1 region.
-- These clusters reflect **structural differences in URLs**, not classes.
+Heuristics include:
+- Very short domain age
+- Excessive special characters in the URL
+- Presence of raw IP addresses
+- Suspicious TLDs (`suspecious_tld`)
+- High values in `statistical_report`
+- Fake HTTPS tokens
+- URLs not indexed by Google
 
-K-means was exploratory and not used for evaluation since no true label existed.
-
----
-
-##  Supervised Machine Learning (Next Steps)
-
-Now that a target variable has been reconstructed, the project is ready to begin supervised modeling:
-
-- Train/test split  
-- Random Forest  
-- Logistic Regression  
-- XGBoost  
-- SVM  
-- Evaluation metrics  
-
-This phase begins immediately after establishing the rule-based labels.
+These rules produce a reliable proxy label for supervised learning.
 
 ---
 
-##  Project Status (So Far)
+## Supervised Machine Learning (Next Steps)
 
-- Dataset loaded   
-- Irrelevant/empty label column removed   
-- PCA completed   
-- K-Means clustering completed   
-- Rule-based target variable constructed   
-- Ready to begin ML classification modeling   
+With the reconstructed target, the notebook proceeds to:
+1. Train/test split
+2. Model training using:
+   - Random Forest
+   - Logistic Regression
+   - XGBoost
+   - Support Vector Machine
+3. Evaluation with accuracy, ROC‑AUC, confusion matrix, and feature importance visualizations.
+4. (Optional) Deploy the best model as a Flask API for real‑time prediction.
+
+---
+
+## Project Status
+- Dataset loaded and cleaned
+- PCA and K‑Means completed
+- Rule‑based target variable generated
+- Ready to begin supervised classification modeling
 
 ---
 
-##  Next Steps
-
-- Train multiple ML models  
-- Compare performance  
-- Plot ROC, confusion matrix, and feature importance  
-- Deploy as a prediction API / Flask app (optional)  
+## Next Steps
+- Train multiple ML models and compare performance
+- Plot ROC curves, confusion matrices, and feature importance
+- Optionally package the model into a prediction API (Flask) for deployment
 
 ---
+
+*All code and analysis are available in `Model.ipynb`.*
+
